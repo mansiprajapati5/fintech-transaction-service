@@ -1,0 +1,45 @@
+server:
+  port: 8082
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: transaction-service
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/transaction
+
+# Eureka Service discovery
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# JWT
+app:
+  base-url: http://localhost:8082
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 86400000
+    refresh-expiration: 604800000
+
+# Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# Logging
+logging:
+  level:
+    com.fintech: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

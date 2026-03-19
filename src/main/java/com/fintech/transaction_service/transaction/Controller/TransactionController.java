@@ -2,10 +2,7 @@ package com.fintech.transaction_service.transaction.Controller;
 
 import com.fintech.transaction_service.common.exception.InsufficientFundsException;
 import com.fintech.transaction_service.common.exception.UnauthorizedException;
-import com.fintech.transaction_service.transaction.Decorator.DepositRequest;
-import com.fintech.transaction_service.transaction.Decorator.TransactionResponse;
-import com.fintech.transaction_service.transaction.Decorator.TransferRequest;
-import com.fintech.transaction_service.transaction.Decorator.WithdrawRequest;
+import com.fintech.transaction_service.transaction.Decorator.*;
 import com.fintech.transaction_service.transaction.Service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +59,13 @@ public class TransactionController {
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(
                 transactionService.getTransactionHistory(accountId, page, size));
+    }
+    @PostMapping("/payment")
+    public ResponseEntity<TransactionResponse> payment(
+            @Valid @RequestBody PaymentRequest request) throws UnauthorizedException, InsufficientFundsException {
+        String userId = (String) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(transactionService.payment(request, userId));
     }
 }
